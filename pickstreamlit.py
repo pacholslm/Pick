@@ -5,7 +5,7 @@ import math
 
 st.set_page_config(page_title="Teorema de Pick", page_icon="📐", layout="centered")
 
-st.title("Teorema de Pick: Frontera, interior y área")
+st.title("Teorema de Pick: Interior, frontera y área")
 st.write("Calcula el área de un polígono en una cuadrícula utilizando la fórmula de Pick.")
 
 # Selección del número de vértices
@@ -18,15 +18,14 @@ vx = []
 vy = []
 
 # Crear campos de entrada organizados en dos columnas (X e Y) por cada vértice
+# Ahora todos los valores inician en 0
 for i in range(int(n)):
     col1, col2 = st.columns(2)
     with col1:
-        x = st.number_input(f"Vértice {i+1} - X", value=i, step=1, format="%d", key=f"vx_{i}")
+        x = st.number_input(f"Vértice {i+1} - X", value=0, step=1, format="%d", key=f"vx_{i}")
         vx.append(int(x))
     with col2:
-        # Valores predeterminados sencillos para evitar polígonos inválidos iniciales
-        default_y = 0 if i % 2 == 0 else 2
-        y = st.number_input(f"Vértice {i+1} - Y", value=default_y, step=1, format="%d", key=f"vy_{i}")
+        y = st.number_input(f"Vértice {i+1} - Y", value=0, step=1, format="%d", key=f"vy_{i}")
         vy.append(int(y))
 
 st.markdown("---")
@@ -69,8 +68,8 @@ if st.button("Analizar con el Teorema de Pick", type="primary"):
         area = I + (B / 2) - 1
 
         # Mostrar métricas de resultados
-        st.success("¡Resultados numéricos y gráficos!")
-        
+        st.success("¡Análisis realizado con éxito!")
+              
         m1, m2, m3 = st.columns(3)
         m1.metric("Puntos en la Frontera (B)", B)
         m2.metric("Puntos en el Interior (I)", I)
@@ -80,13 +79,16 @@ if st.button("Analizar con el Teorema de Pick", type="primary"):
         fig, ax = plt.subplots(figsize=(6, 6))
         ax.fill(vx + [vx[0]], vy + [vy[0]], alpha=0.1, color='gray')
         
-        # Corrección aplicada aquí en la coordenada Y final
+        # Corrección aplicada en la coordenada Y final para cerrar bien el trazo del polígono
         ax.plot(vx + [vx[0]], vy + [vy[0]], 'k-', lw=1) 
         
         ax.scatter(puntos_b_x, puntos_b_y, color='blue', s=50, label=f'Frontera (B={B})', zorder=3)
         ax.scatter(puntos_i_x, puntos_i_y, color='red', s=50, label=f'Interior (I={I})', zorder=3)
         
-        ax.set_title(rf"Área $= {I} + \dfrac{{{B}}}{{2}} - 1 = {area}$", fontsize=13)
+        # 2. Renderizar el título de Matplotlib con formato LaTeX
+        #ax.set_title(rf"Área $= {I} + \frac{{{B}}}{{2}} - 1 = {area}$", fontsize=13)
+          # 1. Mostrar la fórmula desarrollada usando LaTeX en Streamlit
+        st.latex(rf"\text{{Área}} = {I} + \dfrac{{{B}}}{{2}} - 1 = {area}")
         ax.grid(True, linestyle=':', alpha=0.6)
         ax.legend()
         
