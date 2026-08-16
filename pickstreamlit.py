@@ -6,10 +6,10 @@ import math
 
 st.set_page_config(page_title="Teorema de Pick", page_icon="📐", layout="centered")
 
-# Función de reinicio que fuerza los valores por defecto en la sesión
+# Valores por defecto
 def reiniciar_todo():
     st.session_state["num_vertices"] = 3
-    for i in range(40):  # Limpiamos hasta el máximo posible de vértices
+    for i in range(40):  
         if f"vx_{i}" in st.session_state:
             st.session_state[f"vx_{i}"] = 0
         if f"vy_{i}" in st.session_state:
@@ -19,11 +19,10 @@ st.title("Teorema de Pick: Interior, frontera y área")
 st.write("Desarrollado en python por Emmanuel Francisco Castro, Bogotá Colombia. pacholslm@gmail.com ")
 st.subheader("Calcula el área de un polígono en una cuadrícula utilizando la fórmula de Pick.")
 
-# Inicializar el estado del número de vértices si no existe
+
 if "num_vertices" not in st.session_state:
     st.session_state["num_vertices"] = 3
 
-# Selección del número de vértices vinculado a session_state
 n = st.number_input("Número de vértices del polígono (mínimo 3):", min_value=3, max_value=40, value=st.session_state["num_vertices"], step=1, key="num_vertices")
 
 st.markdown("### Coordenadas de los Vértices")
@@ -32,9 +31,8 @@ st.markdown("Introduce las coordenadas enteras para cada vértice:")
 vx = []
 vy = []
 
-# Crear campos de entrada organizados en dos columnas (X e Y) por cada vértice
 for i in range(int(n)):
-    # Asegurar que existan en la sesión con valor 0 por defecto
+
     if f"vx_{i}" not in st.session_state:
         st.session_state[f"vx_{i}"] = 0
     if f"vy_{i}" not in st.session_state:
@@ -50,7 +48,7 @@ for i in range(int(n)):
 
 st.markdown("---")
 
-# Botones organizados lado a lado usando el callback de reinicio forzado
+
 col_btn1, col_btn2 = st.columns(2)
 
 with col_btn1:
@@ -64,7 +62,7 @@ if analizar:
         vertices = list(zip(vx, vy))
         path = mpath.Path(vertices + [vertices[0]])
 
-        # 1. Calcular Puntos en la Frontera (B)
+        
         puntos_b_x, puntos_b_y = [], []
         B = 0
         num_v = len(vx)
@@ -78,7 +76,7 @@ if analizar:
                 puntos_b_y.append(y1 + j * (y2 - y1) // g)
             B += g
 
-        # 2. Calcular Puntos en el Interior (I)
+        
         lista_frontera = list(zip(puntos_b_x, puntos_b_y))
         
         min_x, max_x = min(vx), max(vx)
@@ -94,7 +92,6 @@ if analizar:
         I = len(puntos_i_x)
         area = I + (B / 2) - 1
 
-        # Mostrar métricas de resultados
         st.success("¡Análisis realizado con éxito!")
               
         m1, m2, m3 = st.columns(3)
@@ -102,7 +99,7 @@ if analizar:
         m2.metric("Puntos en el Interior (I)", I)
         m3.metric("Área Total", f"{area}")
 
-        # 3. Graficar con Matplotlib
+        
         fig, ax = plt.subplots(figsize=(6, 6))
         ax.fill(vx + [vx[0]], vy + [vy[0]], alpha=0.1, color='gray')
         
@@ -111,7 +108,7 @@ if analizar:
         ax.scatter(puntos_b_x, puntos_b_y, color='blue', s=50, label=f'Frontera (B={B})', zorder=3)
         ax.scatter(puntos_i_x, puntos_i_y, color='red', s=50, label=f'Interior (I={I})', zorder=3)
         
-        # Forzar números enteros (múltiplos de 1) en los ejes
+        
         ax.xaxis.set_major_locator(MultipleLocator(1))
         ax.yaxis.set_major_locator(MultipleLocator(1))
         
@@ -124,7 +121,6 @@ if analizar:
         ax.grid(True, linestyle=':', alpha=0.6)
         ax.legend()
         
-        # Renderizar gráfico en Streamlit
         st.pyplot(fig)
 
     except Exception as e:
