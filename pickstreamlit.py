@@ -23,7 +23,7 @@ st.subheader("Calcula el área de un polígono en una cuadrícula utilizando la 
 if "num_vertices" not in st.session_state:
     st.session_state["num_vertices"] = 3
 
-n = st.number_input("Número de vértices del polígono (mínimo 3):", min_value=3, max_value=40, value=st.session_state["num_vertices"], step=1, key="num_vertices")
+n = st.number_input("Ingresa el número de vértices del polígono (mínimo 3):", min_value=3, max_value=40, value=st.session_state["num_vertices"], step=1, key="num_vertices")
 
 st.markdown("### Coordenadas de los Vértices")
 st.markdown("Introduce las coordenadas enteras para cada vértice:")
